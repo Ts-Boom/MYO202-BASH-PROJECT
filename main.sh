@@ -27,3 +27,4 @@ echo "$PAROLA" | gpg --batch --yes --passphrase-fd 0 --symmetric --cipher-algo A
 rm report.log
 
 echo "Tebrikler! İşlem başarıyla tamamlandı ve şifreli log dosyası (report.log.gpg) oluşturuldu."
+ 
