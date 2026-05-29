@@ -14,17 +14,21 @@ date -Iseconds > report.log
 echo "--- İŞLEMCİ, RAM, ANAKART VE UUID BİLGİSİ ---" >> report.log
 system_profiler SPHardwareDataType >> report.log
 
+# DİSK BİLGİSİ (Hocanın istediği kapasite, marka, model. UUID hariç!)
+echo "--- DİSK BİLGİSİ (KAPASİTE, MARKA, MODEL) ---" >> report.log
+system_profiler SPStorageDataType | grep -v "UUID" >> report.log
+
 echo "--- MAC ADRESİ BİLGİSİ ---" >> report.log
 ifconfig | grep -w "ether" >> report.log
 
-# 3. Kullanıcıdan parola iste ve PAROLA değişkeninde sakla
-read -p "Lütfen parolayı giriniz: " PAROLA
+# 3. Kullanıcıdan parola iste (Şifre ekranda görünmez, gizli giriş)
+read -sp "Lütfen parolayı giriniz: " PAROLA
+echo ""
 
-# 4. GPG ile AES256 algoritmasını kullanarak batch modunda simetrik şifreleme yap
+# 4. GPG ile AES256 algoritmasını kullanarak simetrik şifreleme yap
 echo "$PAROLA" | gpg --batch --yes --passphrase-fd 0 --symmetric --cipher-algo AES256 -o report.log.gpg report.log
 
-# 5. İşlem bittikten sonra şifresiz orijinal report.log dosyasını sil
+# 5. İşlem bittikten sonra orijinal dosyayı sil
 rm report.log
 
 echo "Tebrikler! İşlem başarıyla tamamlandı ve şifreli log dosyası (report.log.gpg) oluşturuldu."
- 
